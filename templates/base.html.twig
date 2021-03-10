@@ -9,7 +9,7 @@
         {% block stylesheets %}
            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
-           <link rel="stylesheet" href="{{ asset('css/style.css') }}"> 
+           <link rel="stylesheet" href="{{ asset('/style.css') }}"> 
         {% endblock %}
 
        
@@ -18,7 +18,7 @@
        <header>
             
                             <nav class="navbar navbar-expand-lg navbar-light bg-info">
-                <a class="navbar-brand" href="#">Mon blog musical</a>
+                <a class="navbar-brand" href="{{ path('home')}}">Mon blog musical</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -26,7 +26,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Affichage des articles</a>
+                        <a class="nav-link" href="{{ path('blog')}}">Affichage des articles</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Nouvel article</a>
