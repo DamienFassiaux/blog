@@ -19,15 +19,29 @@ class BlogController extends AbstractController
             'age' => 25
         ]);
     }
-    
 
+    /**
+     * méthode permettant d'afficher toute la liste des articles stockés en BDD
+     */
     /**
      * @Route("/blog", name="blog")
      */
     public function index(): Response
     {
         return $this->render('blog/index.html.twig', [
-            'controller_name' => 'BlogController',
+            'title' => 'Liste des articles',
         ]);
     }
+
+
+    /**
+     * methode permettant d'afficher le detail d'un article
+     * 
+     * @Route("/blog/12", name="blog_show")
+     */
+
+     public function show(): Response
+     {
+         return $this->render('blog/show.html.twig');
+     }
 }
