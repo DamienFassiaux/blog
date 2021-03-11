@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -53,15 +56,51 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/blog/new" , name="blog_create")
+     * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create(Request $request): Response
+    public function create(Article $articleCreate = null, Request $request, EntityManagerInterface $manager): Response
     {
-        // la classe Request de Symfony permet de véhiculer les données des superglobales PHP ($_POST, $_FILES, $_COOKIE, $_SESSION)
-        // $request est un objet issu de la classe Request injecté en dependance de la méthode create()
+        dump($articleCreate);
 
-        dump($request);
+          
+        if(!$articleCreate)
+        {
+         $articleCreate = new Article;
+        }
 
-        return $this->render('blog/create.html.twig');
+         //nous renseignons le setter de l'objet et Symfony est capable automatiquement d'envoyer les valeurs de l'entité directement dans les attributs 'value' du formulaire, étant donné que l'entité $articleCreate est relié au formulaire
+         //$articleCreate->setTitle("Titre à la con")
+           //            ->setContent("contenu à la con");
+
+         //nous avons creer une classe qui permet de generer le formulaire d'ajout d'article, il faut ds le controller importer cette classe ArticleFormType et relier le formulaire à notre entité Article $articleCreate
+         $form = $this->createForm(ArticleFormType::class, $articleCreate);
+
+        //On pioche dans l'objet du formulaire la méthode handleRequest() qui permet de récupérer chaque données saisies ds le formulaire et de les binder(transmettre) dans les bons setteurs de mon entité 
+        $form->handleRequest($request);
+
+        dump($articleCreate);
+
+         //si formulaire soumis et champs valides dans les bon setteurs de l'entité alors on netre ds le if on génère l'insertion et on appel le setter de la date car pas de champ date ds le formulaire
+        if($form->isSubmitted() && $form->isValid())
+        {
+
+            if(!$articleCreate->getId()) //on rentre ds le if en cas d'insertion, l'article n'a pas d'Id  
+            {
+            $articleCreate->setCreatedAt(new \DateTime);
+            }
+
+            $manager->persist($articleCreate);//on appel le manager pour preparer la requete d'insertion et la garder en memoire
+            $manager->flush(); //on execute la requete d'insertion en BDD
+
+            return $this->redirectToRoute('blog_show',[
+                'id' => $articleCreate->getId()
+            ]);
+        }
+
+        return $this->render('blog/create.html.twig',[
+          'formArticle' => $form->createView(),
+          'editMode' => $articleCreate->getId() //Cela permet de savoir ds le template si l'article possède un article ou non, si insertion ou modification
+      ]);
     }
 
 
