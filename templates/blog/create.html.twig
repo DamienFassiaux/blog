@@ -6,9 +6,17 @@
 
 {% block body %}
 
-   <h1 class="display-4 text-center my-5">Création d'un nouvel article</h1>
+   <h1 class="display-4 text-center my-5">
+   
+   {% if editMode %}
+   Modification de l'article n° {{ editMode }}
+   {% else %}
+   Création d'un nouvel article
+   {% endif %}
+   
+   </h1>
 
-   <form method="post" class="col-md-5 mx-auto">
+ {# <form method="post" class="col-md-5 mx-auto">
   <div class="form-group">
     <label for="title">Titre</label>
     <input type="text" class="form-control" id="title" name="title">
@@ -22,6 +30,32 @@
     <input type="text" class="form-control" id="image" name="image">
   </div>
   <button type="submit" class="btn btn-secondary mb-5">Enregistrer l'article</button>
-</form>
+</form>  #}
+
+ {# {{ form(formArticle) }}  form() est une fonction twig qui permet d'afficher le rendu du formulaire #}
+
+ {{ form_start(formArticle, {'attr': {'class': 'col-md-5 mx-auto'} }) }}
+
+    {{ form_row(formArticle.title, {'attr': {'placeholder':"Saisir le titre de l'article", "maxLength" : false, "pattern" : false},
+                                             'label':"Titre de l'article"} ) }}
+
+    {{ form_row(formArticle.content, {'attr': {'placeholder':"Contenu de l'article",'rows': 15},
+                                               'label':"Contenu de l'article"} ) }}
+
+    {{ form_row(formArticle.image, {'attr': {'placeholder':"Saisir l'URL de l'image"},
+                                             'label':"Contenu de l'image"} ) }}
+
+    <button type="submit" class="btn btn-secondary">
+
+     {% if editMode %}
+     Modifier l'article n° {{ editMode }}
+     {% else %}
+     Enregistrer l'article
+     {% endif %}
+    
+    </button>
+
+
+ {{ form_end(formArticle) }}
 
 {% endblock %}
