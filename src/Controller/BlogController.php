@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Form\ArticleFormType;
+use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -110,9 +113,12 @@ class BlogController extends AbstractController
      * @Route("/blog/{id}", name="blog_show")
      */
 
-     public function show(Article $article): Response
+     public function show(Article $article, request $request, EntityManagerInterface $manager): Response
      {
+        
+        $comment = new Comment();
 
+        $formComment = $this->createForm(CommentFormType::class, $comment);
         //$repoArticle = $this->getDoctrine()->getRepository(Article::class);
 
         // dump($repoArticle);
@@ -121,10 +127,28 @@ class BlogController extends AbstractController
 
          //$article = $repoArticle->find($id);
 
-         dump($article);
+         $formComment->handleRequest($request);
+
+         dump($comment);
+
+         if($formComment->isSubmitted() && $formComment->isValid())
+         {
+             $comment->setCreatedAt(new \DateTime())
+                      ->setArticle($article);
+
+                      $manager->persist($comment);
+                      $manager->flush();
+
+                      $this->addFlash('success', "Le commentaire a bien été posté!");
+
+                      return $this->redirectToRoute('blog_show', [
+                                'id' => $article->getId() 
+                      ]);
+         }
 
          return $this->render('blog/show.html.twig',[
-                    'articleTwig'=> $article       // on envoi sur le template les données selectionnées en BDD, c'est à dire les informations d'1 article en fonction l'id transmit dans l'URL
+                    'article'=> $article,
+                    'formComment' => $formComment->createView()      // on envoi sur le template les données selectionnées en BDD, c'est à dire les informations d'1 article en fonction l'id transmit dans l'URL
 
          ]);
      }

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{#% form_theme formArticle 'bootstrap_4_layout.html.twig' %#}
+
+{% block body %}
+
+ <h1 class="display-4 text-center my-5">Inscription sur le site</h1>
+
+ {{ form_start(formRegistration, {'attr': {'class': 'col-md-4 mx-auto'} }) }}
+
+{{ form_row(formRegistration.username, {'label': 'Nom d\'utilisateur', 'attr': {'place
+holder': 'Nom d\'utilisateur...'}}) }}
+
+ {{ form_row(formRegistration.email, {'attr': {'placeholder': 'Adresse email...'}}) }}
+
+ {{ form_row(formRegistration.password, {'label': 'Mot de passe', 'attr': {'placeholder
+': 'Mot de passe...'}}) }}
+
+ {{ form_row(formRegistration.confirm_password, {'label': 'Confirmation du mot de passe
+', 'attr': {'placeholder': 'Répétez votre mot de passe...'}}) }}
+
+ <button type="submit" class="btn btn-secondary">Inscription</button>
+
+ {{ form_end(formRegistration) }}
+
+{% endblock %}
+
+ 

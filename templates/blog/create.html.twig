@@ -38,12 +38,16 @@
 
     {{ form_row(formArticle.title, {'attr': {'placeholder':"Saisir le titre de l'article", "maxLength" : false, "pattern" : false},
                                              'label':"Titre de l'article"} ) }}
+    {#{{ form_row(formArticle.category, {'label': "Choisir une catégorie"} ) }}#}
 
     {{ form_row(formArticle.content, {'attr': {'placeholder':"Contenu de l'article",'rows': 15},
                                                'label':"Contenu de l'article"} ) }}
 
     {{ form_row(formArticle.image, {'attr': {'placeholder':"Saisir l'URL de l'image"},
                                              'label':"Contenu de l'image"} ) }}
+          
+    {{ form_row(formArticle.category, {'attr': {'placeholder':"Saisir l'URL de l'image"}
+                                               , 'label': "choix de la catégorie"} ) }}
 
     <button type="submit" class="btn btn-secondary">
 

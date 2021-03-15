@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,30 +33,11 @@ class Comment
     private $createdAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $Article;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $relation;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="article")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $comment;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="comment")
-     */
-    private $article;
-
-    public function __construct()
-    {
-        $this->article = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -101,60 +80,14 @@ class Comment
         return $this;
     }
 
-    public function getArticle(): ?string
+    public function getArticle(): ?Article
     {
         return $this->Article;
     }
 
-    public function setArticle(string $Article): self
+    public function setArticle(?Article $Article): self
     {
         $this->Article = $Article;
-
-        return $this;
-    }
-
-    public function getRelation(): ?string
-    {
-        return $this->relation;
-    }
-
-    public function setRelation(string $relation): self
-    {
-        $this->relation = $relation;
-
-        return $this;
-    }
-
-    public function getComment(): ?self
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?self $comment): self
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function addArticle(self $article): self
-    {
-        if (!$this->article->contains($article)) {
-            $this->article[] = $article;
-            $article->setComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(self $article): self
-    {
-        if ($this->article->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getComment() === $this) {
-                $article->setComment(null);
-            }
-        }
 
         return $this;
     }
