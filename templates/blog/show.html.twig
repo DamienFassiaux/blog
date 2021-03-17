@@ -20,7 +20,7 @@
    <div class="col-md-8 mx-auto">
 
           <div class="card mb-4 shadow-sm">
-            <img src="{{article.image|replace({'600/400' : '1000/300'}) }}" alt="{{article.title}}">
+            <img src="{{article.image|replace({'600/400' : '1000/300'}) }}" alt="{{article.title}} class="img-user-articles">
 
              <h4 class="text-center"> {{article.title}} </h4>
             <div class="card-body">
@@ -53,7 +53,7 @@
           
 
         <div class="col_md-4"> <span><strong> {{ comment.author }}</strong></span> </div>
-        <small class="font-italic"> Posté le {{ comment.createdAt|date('d/M/Y') }} à {{ comment.createdAt|date('h/i/s') }}
+        <small class="font-italic"> Posté le {{ comment.createdAt|date('d/M/Y') }} à {{ comment.createdAt|date('h:i:s') }}
 
           <div class="col_md-8"> {{ comment.content|striptags }} </div>
 

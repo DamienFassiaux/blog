@@ -17,7 +17,7 @@
 
             <div class="col-md-4">
               <div class="card mb-4 shadow-sm">
-               <img src="{{data.image}}" alt="{{data.title}}">
+               <img src="{{data.image}}" alt="{{data.title}} ">
 
                 <div class="card-body">
 
@@ -28,8 +28,8 @@
                     <div class="btn-group mr-2">
                       <a href="{{ path('blog_show', {'id': data.id}) }}" class="btn btn-sm btn-outline-secondary">En savoir plus</a>
                       <a href="{{ path('blog_edit', {'id': data.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
-                    </div>
-                    <small class="text-muted"> Posté le {{ data.createdAt|date('d/m/Y') }} à {{ data.createdAt|date('H:m:s') }} dans la catégorie <strong> {{ data.category.title }}</strong></small>
+                    </div> 
+                    <small class="text-muted">Le {{ data.createdAt|date('d/m/Y') }} à {{ data.createdAt|date('H:m:s') }} dans la catégorie <strong> {{ data.category.title }}</strong></small>
                   </div>
                 </div>
               </div>
