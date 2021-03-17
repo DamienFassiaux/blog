@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,11 +20,13 @@ class Comment
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "Veuillez renseigner un auteur!")
      */
     private $author;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message = "Veuillez renseigner un contenu à l'article!")
      */
     private $content;
 
@@ -36,7 +39,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Article;
+    private $article;
 
 
     public function getId(): ?int
@@ -82,12 +85,12 @@ class Comment
 
     public function getArticle(): ?Article
     {
-        return $this->Article;
+        return $this->article;
     }
 
-    public function setArticle(?Article $Article): self
+    public function setArticle(?Article $article): self
     {
-        $this->Article = $Article;
+        $this->article = $article;
 
         return $this;
     }
