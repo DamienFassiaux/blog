@@ -43,17 +43,17 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message = "Veuillez renseigner un mot de passe!")
+     * @Assert\NotBlank(message = "Veuillez renseigner un mot de passe!", groups={"registration"})
      * @Assert\EqualTo(propertyPath="confirm_password",
-     * message="Les mots de passe ne correspondent pas")
+     * message="Les mots de passe ne correspondent pas", groups={"registration"})
      * @Assert\Length(min="8", minMessage="Votre mot de passe doit faire minimum 8 caractères")
      */
     private $password;
 
     /**
-     * @Assert\NotBlank(message = "Veuillez confirmer votre mot de passe!")
+     * @Assert\NotBlank(message = "Veuillez confirmer votre mot de passe!", groups={"registration"})
      * @Assert\EqualTo(propertyPath="password",
-     * message="Les mots de passe ne correspondent pas")
+     * message="Les mots de passe ne correspondent pas", groups={"registration"})
     */
     public $confirm_password;
 

@@ -42,7 +42,7 @@
                <tr>
                   <td>{{ oneCategory.id }}</td>
                   <td>{{ oneCategory.title }}</td>
-                  <td>{{ oneCategory.description|striptags|slice(0,300) }}...</td>
+                  <td>{{ oneCategory.description }}...</td>
                   <td>{{ oneCategory.articles|length }}</td>
 
                   <td><a href="{{ path('admin_edit_category', {'id': oneCategory.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i></a></td>

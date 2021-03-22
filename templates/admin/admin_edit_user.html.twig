@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    BACKOFFICE | Modification membre
+{% endblock %}
+
+{% block body %}
+ 
+     <h1 class="display-4 text-center my-5">Modification membre n° <span class="text-info">{{ idUser }}</span></h1>
+
+
+     {{ form_start(formUser ,{'attr': {'class': 'col-md-3 mx-auto'}} ) }}
+        
+        {{ form_row(formUser.email, {'label': "Email"} ) }}
+
+        {{ form_row(formUser.username, {'label': "Username"}) }}
+
+        {{ form_row(formUser.roles, {'label': false}) }}
+
+
+        <button type="submit" class="btn btn-secondary mb-5">Modifier le membre</button>
+
+     {{ form_end(formUser) }}
+
+{% endblock %}

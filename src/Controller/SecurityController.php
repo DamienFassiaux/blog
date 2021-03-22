@@ -23,7 +23,9 @@ class SecurityController extends AbstractController
     {
         $user = new User(); // on précise à quelle entité va être relié notre formulaire
 
-        $formRegistration = $this->createForm(registrationType::class, $user); // on appel la classe qui permet de construire le formulaire
+        $formRegistration = $this->createForm(registrationType::class, $user, [
+          'validation_groups' => ['registration']  // Nous definissons un groupe de validation afin qu'elles ne soient pris en compte seulement lors de l'inscription mais pas dans le Backoffice cf RegistrationType.php
+        ]); // on appel la classe qui permet de construire le formulaire
 
         dump($request);
 
@@ -35,7 +37,8 @@ class SecurityController extends AbstractController
                 {
                    $hash = $encoder->encodePassword($user, $user->getPassword()); 
     
-                    $user->setPassword($hash); 
+                    $user->setPassword($hash);
+                    $user->setRoles(["ROLE_USER"]); //role User par défaut pour chaque User
 
                     dump($hash);
        

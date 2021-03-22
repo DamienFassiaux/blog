@@ -16,6 +16,9 @@ use App\Entity\Comment;
 use App\Form\CategoryFormType;
 use App\Repository\CommentRepository;
 use App\Form\CommentFormType;
+use App\Repository\UserRepository;
+use App\Entity\User;
+use App\Form\UserFormType;
 
 class AdminController extends AbstractController
 {
@@ -210,11 +213,15 @@ class AdminController extends AbstractController
         if($comment)
         {
             $id = $comment->getId();
+            $auteur = $comment->getAuthor();
+
+            $date = $comment->getCreatedAt();
+            $dateFormat = $date->format('d/m/Y à H:i:s');
 
             $manager->remove($comment);
             $manager->flush();
 
-            $this->addFlash('success', "Le commentaire n°$id a bien été supprimé !");
+            $this->addFlash('success', "Le commentaire n°$id posté par $auteur le $dateFormat a bien été supprimé !");
 
             return $this->redirectToRoute('admin_comments');
         }
@@ -242,10 +249,16 @@ class AdminController extends AbstractController
 
         if($formComment->isSubmitted() && $formComment->isValid())
         {
+
+            $id = $comment->getId();
+            $auteur = $comment->getAuthor();
+            $date = $comment->getCreatedAt();
+            $dateFormat = $date->format('d/m/Y à H:i:s');
+
             $manager->persist($comment);
             $manager->flush();
 
-            $this->addFlash('success', "Le commentaire n° ". $comment->getId() . " a bien été modifié");
+            $this->addFlash('success', "Le commentaire n°$id posté par $auteur le $dateFormat a bien été modifié");
 
             return $this->redirectToRoute('admin_comments');
 
@@ -254,6 +267,77 @@ class AdminController extends AbstractController
         return $this->render('admin/admin_edit_comment.html.twig', [
             'idComment'=> $comment->getId(),
             'formComment'=> $formComment->createView()
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/users", name="admin_users")
+     * @Route("/admin/user/{id}/remove", name="admin_remove_user")
+     */
+    public function adminUsers(EntityManagerInterface $manager, UserRepository $repoUser, User $user = null): Response 
+    {
+        
+    $colonnes = $manager->getClassMetadata(User::class)->getFieldNames();
+
+        dump($colonnes);
+
+
+        $users = $repoUser->findAll();
+
+        dump($users);
+
+        if($user)
+        {
+
+            $id = $user->getId();
+
+            $manager->remove($user);
+            $manager->flush();
+
+            $this->addFlash('success', "L'utilisateur n°$id a bien été supprimé !");
+
+            return $this->redirectToRoute('admin_users');
+        }
+
+        return $this->render('admin/admin_users.html.twig', [
+            'colonnes'=> $colonnes,
+            'usersBdd'=>$users 
+        ]);
+}
+
+/**
+     * 
+     * @Route("/admin/user/{id}/edit", name="admin_edit_user")
+     */
+    public function adminEditUser(User $user, Request $request, EntityManagerInterface $manager): Response
+    {
+        dump($user);
+
+        $formUser = $this->createForm(UserFormType::class, $user);
+
+        dump($request);
+
+        $formUser->handleRequest($request); 
+
+        if($formUser->isSubmitted() && $formUser->isValid())
+        {
+
+            $id = $user->getId();
+            $username = $user->getUsername();
+
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash('success', "L'utilisateur $username ID$id a bien été modifié");
+
+            return $this->redirectToRoute('admin_users');
+
+        }
+
+        return $this->render('admin/admin_edit_user.html.twig', [
+            'idUser'=> $user->getId(),
+            'formUser'=> $formUser->createView()
         ]);
     }
 }
