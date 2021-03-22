@@ -20,7 +20,7 @@
    <div class="col-md-8 mx-auto">
 
           <div class="card mb-4 shadow-sm">
-            <img src="{{article.image|replace({'600/400' : '1000/300'}) }}" alt="{{article.title}} class="img-user-articles">
+            <img src="{{ asset('uploads/images/' ~ article.image) }}" alt="{{article.title}} class="img-user-articles">
 
              <h4 class="text-center"> {{article.title}} </h4>
             <div class="card-body">

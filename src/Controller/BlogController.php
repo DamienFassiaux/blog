@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class BlogController extends AbstractController
 {
@@ -61,7 +64,7 @@ class BlogController extends AbstractController
      * @Route("/blog/new" , name="blog_create")
      * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create(Article $articleCreate = null, Request $request, EntityManagerInterface $manager): Response
+    public function create(Article $articleCreate = null, Request $request, EntityManagerInterface $manager, SluggerInterface $slugger): Response
     {
         dump($articleCreate);
 
@@ -86,6 +89,35 @@ class BlogController extends AbstractController
          //si formulaire soumis et champs valides dans les bon setteurs de l'entité alors on netre ds le if on génère l'insertion et on appel le setter de la date car pas de champ date ds le formulaire
         if($form->isSubmitted() && $form->isValid())
         {
+            /**@var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+            dump($imageFile);
+
+            if($imageFile)
+            {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                dump($originalFilename);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                dump($safeFilename);
+
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                try
+                {
+                    $imageFile->move(
+                        $this->getParameter('image_directory'),
+                        $newFilename
+                    );
+                }
+                catch(FileException $e)
+                {
+
+                }
+
+                $articleCreate->setImage($newFilename);
+                
+            }
 
             if(!$articleCreate->getId()) //on rentre ds le if en cas d'insertion, l'article n'a pas d'Id  
             {
